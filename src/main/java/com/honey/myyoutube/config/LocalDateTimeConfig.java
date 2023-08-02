@@ -9,7 +9,6 @@ import java.time.ZonedDateTime;
 
 @Configuration
 public class LocalDateTimeConfig {
-
     @Bean
     public LocalDateTime koreaLocalDateTime() {
         ZoneId koreaZoneId = ZoneId.of("Asia/Seoul");
