@@ -1,7 +1,6 @@
-package com.honey.myyoutube.dto;
+package com.honey.myyoutube.dto.youtubeapi;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.honey.myyoutube.domain.VideoCategory;
+import com.honey.myyoutube.domain.Category;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,8 +21,8 @@ public class VideoCategoryResponse {
             private String title;
         }
 
-        public VideoCategory toEntity() {
-            return VideoCategory.builder()
+        public Category toEntity() {
+            return com.honey.myyoutube.domain.Category.builder()
                     .id(id)
                     .title(snippet.title)
                     .build();
