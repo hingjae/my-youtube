@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko" data-bs-theme="auto" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.115.4">
+    <title>My YouTube</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/videos.css">
+</head>
+<body>
+<header data-bs-theme="dark">
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a href="/videos" class="navbar-brand d-flex align-items-center">
+                <img class="sm" height="30" src="/img/star.png"/>
+                <strong>My YouTube</strong>
+            </a>
+        </div>
+    </div>
+</header>
+<main>
+    <div class="pt-5 text-center container">
+        <div class="row py-lg-5">
+            <div>
+                <h1>YouTube 인기 급상승 동영상</h1>
+                <h3 class="pt-3 fw-light"
+                    th:text="'검색 날짜 : ' + ${searchDate.getYear() + '년 ' + searchDate.getMonthValue() + '월 ' + searchDate.getDayOfMonth() + '일'}">
+                    검색 날짜 : 2023년 8월 2일</h3>
+                <input id="searchDate" hidden th:value="${searchDate}"/>
+                <div class="pt-3">
+                    <form class="d-flex justify-content-center" action="videos" method="get">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label for="date-input" class="mt-2">날짜 검색</label>
+                                <input id="date-input" class="form-control mx-2" type="date" name="searchDate"/>
+                                <button type="submit" class="btn btn-primary">검색</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <form th:action="@{/videos}" method="get">
+                    <input type="hidden" name="searchDate" th:value="${searchDate}"/>
+                    <div id="categoryList" class="row row-cols-lg-6 pt-4 d-flex justify-content-center">
+                        <div th:each="category : ${categories}">
+                            <button class="col btn btn-primary m-2" type="button" th:id="${category.id}" th:text="${category.title}" onclick="chooseCategory(this)"></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="album py-5 bg-body-tertiary">
+        <div class="container">
+            <div id="videoList" class="row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-4">
+                <div class="col mb-3" th:each="video : ${videos}">
+                    <div class="card shadow-sm">
+                        <img class="card-img-top" width="100%" height="225" th:src="${video.thumbnails}"/>
+                        <div class="card-body">
+                            <p class="card-title text-truncate" th:text="${video.title}">제목</p>
+                            <div class="card-text text-truncate" th:text="${video.channelTitle}">채널 명</div>
+                            <div class="card-text text-truncate">
+                                <span th:text="${#temporals.format(video.publishedAt, 'yyyy-MM-dd')}"></span>
+                                <span> / 조회수</span>
+                                <span class="viewCount" th:text="${video.viewCount}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="loadMoreDiv" class="text-center pt-3">
+                <button type="button" class="btn btn-primary" id="loadMoreBtn">더보기</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="/js/videos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+</body>
+</html>
