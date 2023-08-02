@@ -10,13 +10,14 @@ import javax.persistence.Id;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class VideoCategory {
+public class Category {
 
-    @Id private String id;
+    @Id
+    private String id;
     @Column(nullable = false) private String title;
 
     @Builder
-    private VideoCategory(String id, String title) {
+    private Category(String id, String title) {
         this.id = id;
         this.title = title;
     }
