@@ -1,13 +1,11 @@
 package com.honey.myyoutube.config;
 
-import com.honey.myyoutube.controller.YoutubeApiController;
-import com.honey.myyoutube.service.YoutubeService;
+import com.honey.myyoutube.service.LoadDataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
@@ -17,31 +15,18 @@ public class LoadDataScheduler {
 
     private final static int FIXED_PAGE_SIZE = 50;
     private final static String FIRST_PAGE_TOKEN_IS_NULL = null;
-    private final YoutubeService youtubeService;
+    private final LoadDataService loadDataService;
     private final LocalDateTime localDateTime;
 
-    @Scheduled(cron = "0 10 9 * * *", zone = "Asia/Seoul")
+    /**
+     * 매일 정해진 시간에 주기적으로 유튜브 api를 호출해 데이터를 불러와 저장한다.
+     */
+    @Scheduled(cron = "0 10 0,6,9,12,15,18,21 * * *", zone = "Asia/Seoul")
     public void callScheduledMethodAt9AM() {
         loadData();
     }
 
-    @Scheduled(cron = "0 10 21 * * *", zone = "Asia/Seoul")
-    public void callScheduledMethodAt9PM() {
-        loadData();
-    }
-
     private void loadData() {
-        youtubeService.loadVideos(
-                FIXED_PAGE_SIZE,
-                FIRST_PAGE_TOKEN_IS_NULL,
-                LocalDateTime.of(
-                        localDateTime.getYear(),
-                        localDateTime.getMonthValue(),
-                        localDateTime.getDayOfMonth(),
-                        localDateTime.getHour(),
-                        0,
-                        0
-                )
-        );
+        loadDataService.loadVideos(FIXED_PAGE_SIZE, FIRST_PAGE_TOKEN_IS_NULL, localDateTime.now());
     }
 }
