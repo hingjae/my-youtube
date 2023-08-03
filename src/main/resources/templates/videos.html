@@ -46,7 +46,8 @@
                     <input type="hidden" name="searchDate" th:value="${searchDate}"/>
                     <div id="categoryList" class="row row-cols-lg-6 pt-4 d-flex justify-content-center">
                         <div th:each="category : ${categories}">
-                            <button class="col btn btn-primary m-2" type="button" th:id="${category.id}" th:text="${category.title}" onclick="chooseCategory(this)"></button>
+                            <button class="col btn btn-primary m-2 categoryBtn" type="button" th:id="${category.id}"
+                                    th:text="${category.title}" onclick="chooseCategory(this)"></button>
                         </div>
                     </div>
                 </form>
@@ -59,7 +60,9 @@
             <div id="videoList" class="row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-4">
                 <div class="col mb-3" th:each="video : ${videos}">
                     <div class="card shadow-sm">
-                        <img class="card-img-top" width="100%" height="225" th:src="${video.thumbnails}"/>
+                        <a th:href="@{'/videos/'+${video.id}}">
+                            <img class="card-img-top" width="100%" height="225" th:src="${video.thumbnails}"/>
+                        </a>
                         <div class="card-body">
                             <p class="card-title text-truncate" th:text="${video.title}">제목</p>
                             <div class="card-text text-truncate" th:text="${video.channelTitle}">채널 명</div>
