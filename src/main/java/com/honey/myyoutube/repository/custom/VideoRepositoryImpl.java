@@ -1,6 +1,7 @@
 package com.honey.myyoutube.repository.custom;
 
 import com.honey.myyoutube.dto.searchcondition.VideoSearchCondition;
+import com.honey.myyoutube.dto.view.VideoDetail;
 import com.honey.myyoutube.dto.view.VideoSimple;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
@@ -12,6 +13,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 import static com.honey.myyoutube.domain.QCalendar.calendar;
 import static com.honey.myyoutube.domain.QCategory.category;
@@ -30,7 +32,7 @@ public class VideoRepositoryImpl implements VideoRepositorySearch{
     }
 
     @Override
-    public Page<VideoSimple> findTodayVideoBySearchCondition(Pageable pageable, VideoSearchCondition condition) {
+    public Page<VideoSimple> findTodayVideoPageBySearchCondition(Pageable pageable, VideoSearchCondition condition) {
         BooleanBuilder categoryBuilder = categoryCondition(condition);
         List<VideoSimple> content = query
                 .selectDistinct(Projections.constructor(VideoSimple.class,
@@ -76,7 +78,7 @@ public class VideoRepositoryImpl implements VideoRepositorySearch{
 
     }
     @Override
-    public Page<VideoSimple> findBeforeDayVideoBySearchCondition(Pageable pageable, VideoSearchCondition condition) {
+    public Page<VideoSimple> findBeforeDayVideoPageBySearchCondition(Pageable pageable, VideoSearchCondition condition) {
         BooleanBuilder categoryBuilder = categoryCondition(condition);
         List<VideoSimple> content = query
                 .selectDistinct(Projections.constructor(VideoSimple.class,
@@ -116,6 +118,25 @@ public class VideoRepositoryImpl implements VideoRepositorySearch{
                 .fetchOne();
 
         return new PageImpl<>(content, pageable, total);
+    }
+
+    @Override
+    public Optional<VideoDetail> findByVideoId(String videoId) {
+        VideoDetail videoDetail = query
+                .select(Projections.constructor(VideoDetail.class,
+                        video.id,
+                        video.title,
+                        video.description,
+                        video.publishedAt,
+                        video.viewCount,
+                        channel.id,
+                        channel.title
+                ))
+                .from(video)
+                .join(video.channel, channel)
+                .where(video.id.eq(videoId))
+                .fetchOne();
+        return Optional.ofNullable(videoDetail);
     }
 
     private BooleanBuilder categoryCondition(VideoSearchCondition condition) {

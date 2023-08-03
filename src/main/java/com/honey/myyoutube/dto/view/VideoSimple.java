@@ -1,6 +1,5 @@
 package com.honey.myyoutube.dto.view;
 
-import com.querydsl.core.Tuple;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -10,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 public class VideoSimple {
     private Long trendingVideoId;
-    private String  id;
+    private String id;
     private String title;
     private String thumbnails;
     private LocalDateTime publishedAt;

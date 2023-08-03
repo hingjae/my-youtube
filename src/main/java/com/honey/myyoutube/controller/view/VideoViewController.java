@@ -3,6 +3,7 @@ package com.honey.myyoutube.controller.view;
 import com.honey.myyoutube.controller.api.VideoApiController;
 import com.honey.myyoutube.dto.searchcondition.VideoSearchCondition;
 import com.honey.myyoutube.dto.view.CategoryDto;
+import com.honey.myyoutube.dto.view.VideoDetail;
 import com.honey.myyoutube.dto.view.VideoSimple;
 import com.honey.myyoutube.service.CategoryService;
 import com.honey.myyoutube.service.VideoService;
@@ -14,6 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -44,5 +46,13 @@ public class VideoViewController {
         model.addAttribute("categories", categories);
         model.addAttribute("videos", videos);
         return "videos";
+    }
+
+    @GetMapping("/{videoId}")
+    public String getVideo(@PathVariable String videoId, Model model) {
+        VideoDetail video = videoService.getVideo(videoId);
+//        System.out.println("video = " + video);
+        model.addAttribute("video", video);
+        return "video";
     }
 }
