@@ -1,4 +1,3 @@
-// let searchDate = document.getElementById('searchDate').value;
 let categoryId = null;
 let currentPage = 0;
 
@@ -36,7 +35,7 @@ function loadMoreVideo() {
     const queryParams = new URLSearchParams({
         searchDate: searchDate,
         categoryId: categoryId,
-        page : nextPage
+        page: nextPage
     });
 
     let url = `/api/videos?${queryParams}`;
@@ -47,9 +46,12 @@ function loadMoreVideo() {
             data.content.forEach(video => {
                 let videoDiv = document.createElement("div");
                 videoDiv.className = "col mb-3";
+                let videoUrl = `/videos/${video.id}`;
                 videoDiv.innerHTML =
                     '<div class="card shadow-sm">' +
+                    '<a href="' + videoUrl + '">' +
                     '<img class="card-img-top" width="100%" height="225" src="' + video.thumbnails + '"/>' +
+                    '</a>' +
                     '<div class="card-body">' +
                     '<p class="card-title text-truncate">' + video.title + '</p>' +
                     '<div class="card-text text-truncate">' + video.channelTitle + '</div>' +
@@ -59,7 +61,8 @@ function loadMoreVideo() {
                     '<span class="viewCount">' + viewCountFormat(video.viewCount) + '</span>' +
                     '</div>' +
                     '</div>' +
-                    '</div>';
+                    '</div>'
+                ;
                 videoList.appendChild(videoDiv);
             })
             if (data.last) {
@@ -93,6 +96,15 @@ function formatDate(inputDateStr) {
 }
 
 function chooseCategory(button) {
+    let categoryBtn = document.querySelector('.btn-secondary');
+    if (categoryBtn !== null) {
+        categoryBtn.classList.remove('btn-secondary');
+        categoryBtn.classList.add('btn-primary');
+    }
+
+    button.classList.remove('btn-primary');
+    button.classList.add('btn-secondary');
+
     categoryId = button.id;
     currentPage = 0;
     let searchDate = document.getElementById('searchDate').value;
@@ -102,7 +114,7 @@ function chooseCategory(button) {
     const queryParams = new URLSearchParams({
         searchDate: searchDate,
         categoryId: categoryId,
-        page : currentPage
+        page: currentPage
     });
 
     let videoList = document.getElementById('videoList');
@@ -112,22 +124,26 @@ function chooseCategory(button) {
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            data.content.forEach( video => {
+            data.content.forEach(video => {
                 let videoDiv = document.createElement("div");
                 videoDiv.className = "col mb-3";
+                let videoUrl = `/videos/${video.id}`;
                 videoDiv.innerHTML =
                     '<div class="card shadow-sm">' +
+                    '<a href="' + videoUrl + '">' +
                     '<img class="card-img-top" width="100%" height="225" src="' + video.thumbnails + '"/>' +
+                    '</a>' +
                     '<div class="card-body">' +
                     '<p class="card-title text-truncate">' + video.title + '</p>' +
                     '<div class="card-text text-truncate">' + video.channelTitle + '</div>' +
                     '<div class="card-text text-truncate">' +
-                        '<span>' + formatDate(video.publishedAt) +'</span>' +
-                        '<span>' + ' / 조회수 ' + '</span>' +
-                        '<span class="viewCount">' + viewCountFormat(video.viewCount) +'</span>'+
+                    '<span>' + formatDate(video.publishedAt) + '</span>' +
+                    '<span>' + ' / 조회수 ' + '</span>' +
+                    '<span class="viewCount">' + viewCountFormat(video.viewCount) + '</span>' +
                     '</div>' +
                     '</div>' +
-                    '</div>';
+                    '</div>'
+                ;
                 videoList.appendChild(videoDiv);
             })
             if (data.last) {
