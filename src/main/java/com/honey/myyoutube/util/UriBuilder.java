@@ -33,6 +33,5 @@ public class UriBuilder {
                 .queryParam("key", youtubeProperties.getKey())
                 .build()
                 .toUri();
-
     }
 }

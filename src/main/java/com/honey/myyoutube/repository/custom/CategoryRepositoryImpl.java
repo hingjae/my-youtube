@@ -26,12 +26,12 @@ public class CategoryRepositoryImpl implements CategorySearch{
     @Override
     public List<CategoryDto> findTodayDataByCondition(LocalDate searchDate) {
         return query
-                .selectDistinct(Projections.constructor(CategoryDto.class,
-                        category.id, category.title, category.count()
+                .select(Projections.constructor(CategoryDto.class,
+                        category.id, category.title, video.count()
                 ))
                 .from(trendingVideo)
-                .join(trendingVideo.calendar, calendar)
                 .join(trendingVideo.video, video)
+                .join(trendingVideo.calendar, calendar)
                 .join(video.category, category)
                 .where(
                         calendar.calendarDateTime.eq(JPAExpressions
@@ -46,8 +46,8 @@ public class CategoryRepositoryImpl implements CategorySearch{
     @Override
     public List<CategoryDto> findBeforeDayDataByCondition(LocalDate searchDate) {
         return query
-                .selectDistinct(Projections.constructor(CategoryDto.class,
-                        category.id, category.title, category.count()
+                .select(Projections.constructor(CategoryDto.class,
+                        category.id, category.title, video.count()
                 ))
                 .from(video)
                 .join(video.category, category)

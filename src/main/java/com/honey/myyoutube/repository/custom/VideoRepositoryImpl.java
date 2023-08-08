@@ -5,6 +5,7 @@ import com.honey.myyoutube.dto.view.VideoDetail;
 import com.honey.myyoutube.dto.view.VideoSimple;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,8 +21,6 @@ import static com.honey.myyoutube.domain.QCategory.category;
 import static com.honey.myyoutube.domain.QChannel.channel;
 import static com.honey.myyoutube.domain.QTrendingVideo.trendingVideo;
 import static com.honey.myyoutube.domain.QVideo.video;
-import static com.querydsl.jpa.JPAExpressions.select;
-import static com.querydsl.jpa.JPAExpressions.selectDistinct;
 
 public class VideoRepositoryImpl implements VideoRepositorySearch{
 
@@ -30,13 +29,12 @@ public class VideoRepositoryImpl implements VideoRepositorySearch{
     public VideoRepositoryImpl(EntityManager em) {
         this.query = new JPAQueryFactory(em);
     }
-
+    //TODO: order by 트랜딩 비디오 점수 순으로 바꾸기
     @Override
     public Page<VideoSimple> findTodayVideoPageBySearchCondition(Pageable pageable, VideoSearchCondition condition) {
         BooleanBuilder categoryBuilder = categoryCondition(condition);
         List<VideoSimple> content = query
-                .selectDistinct(Projections.constructor(VideoSimple.class,
-                        trendingVideo.id,
+                .select(Projections.constructor(VideoSimple.class,
                         video.id,
                         video.title,
                         video.thumbnails,
@@ -51,8 +49,10 @@ public class VideoRepositoryImpl implements VideoRepositorySearch{
                 .join(video.category, category)
                 .where(
                         calendar.calendarDateTime.eq(
-                                select(calendar.calendarDateTime.max())
-                                .from(calendar))
+                                JPAExpressions
+                                        .select(calendar.calendarDateTime.max())
+                                        .from(calendar)
+                                )
                                 .and(categoryBuilder)
                 )
                 .orderBy(trendingVideo.id.asc())
@@ -62,14 +62,16 @@ public class VideoRepositoryImpl implements VideoRepositorySearch{
 
         //trendingVideo.count() 를 사용하면 count(trendingVideo.id) 로 처리됩니다.
         Long total = query
-                .select(trendingVideo.count())
+                .select(video.count())
                 .from(trendingVideo)
                 .join(trendingVideo.video, video)
                 .join(trendingVideo.calendar, calendar)
-                .join(video.channel, channel)
                 .join(video.category, category)
                 .where(
-                        calendar.calendarDateTime.eq(select(calendar.calendarDateTime.max()).from(calendar))
+                        calendar.calendarDateTime.eq(
+                                JPAExpressions
+                                        .select(calendar.calendarDateTime.max())
+                                        .from(calendar))
                                 .and(categoryBuilder)
                 )
                 .fetchOne();
@@ -107,7 +109,7 @@ public class VideoRepositoryImpl implements VideoRepositorySearch{
                 .from(video)
                 .where(
                         video.id.in(
-                            selectDistinct(video.id)
+                                JPAExpressions.selectDistinct(video.id)
                                     .from(trendingVideo)
                                     .join(trendingVideo.calendar, calendar)
                                     .join(trendingVideo.video, video)

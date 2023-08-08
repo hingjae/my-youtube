@@ -21,8 +21,8 @@ public class LoadDataScheduler {
     /**
      * 매일 정해진 시간에 주기적으로 유튜브 api를 호출해 데이터를 불러와 저장한다.
      */
-    @Scheduled(cron = "0 10 0,6,9,12,15,18,21 * * *", zone = "Asia/Seoul")
-    public void callScheduledMethodAt9AM() {
+    @Scheduled(cron = "0 1 0,6,9,12,15,18,21 * * *", zone = "Asia/Seoul")
+    public void callScheduledMethod() {
         loadData();
     }
 

@@ -9,8 +9,6 @@ spring:
         show_sql: true
         format_sql: true
     defer-datasource-initialization: true
-    hibernate:
-#      ddl-auto: create
 
 youtube:
   video_url: https://www.googleapis.com/youtube/v3/videos
