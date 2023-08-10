@@ -1,6 +1,7 @@
 package com.honey.myyoutube.service;
 
 import com.honey.myyoutube.domain.Calendar;
+import com.honey.myyoutube.domain.Category;
 import com.honey.myyoutube.dto.youtubeapi.VideoCategoryResponse;
 import com.honey.myyoutube.dto.youtubeapi.VideoCategoryResponse.VideoCategoryDto;
 import com.honey.myyoutube.dto.youtubeapi.VideoResponse.YoutubeVideoDto;
@@ -35,10 +36,23 @@ public class LoadDataService {
     private void saveData(List<YoutubeVideoDto> response, LocalDateTime now) {
         Calendar nowCalendar = saveCalendar(now);
         response.stream().forEach(videoDto -> {
+            checkCategory(videoDto);
             channelRepository.save(videoDto.toChannel());
             videoRepository.save(videoDto.toVideoEntity());
             trendingVideoRepository.save(videoDto.toTrendingVideoEntity(nowCalendar));
         });
+    }
+
+    private void checkCategory(YoutubeVideoDto videoDto) {
+        String categoryId = videoDto.getSnippet().getCategoryId();
+        Category category = categoryRepository.findById(categoryId)
+                .orElseGet(() -> {
+                    Category newCategory = Category.builder()
+                            .id("others")
+                            .title("기타")
+                            .build();
+                    return categoryRepository.save(newCategory);
+                });
     }
 
     private Calendar saveCalendar(LocalDateTime now) {

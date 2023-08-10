@@ -21,7 +21,7 @@ public class VideoResponse {
         private StatisticsDto statistics;
 
         @Getter @Setter
-        static class SnippetDto {
+        public static class SnippetDto {
             private String publishedAt;
             private String title;
             private String description;

@@ -27,7 +27,9 @@ public class CategoryService {
         } else {
             result = categoryRepository.findBeforeDayDataByCondition(searchDate);
         }
-        result.add(0, new CategoryDto("all", "모든 동영상", null));
+        if (result.size() > 0) {
+            result.add(0, new CategoryDto("all", "모든 동영상", null));
+        }
         return result;
     }
     private boolean isToday(LocalDate condition) {

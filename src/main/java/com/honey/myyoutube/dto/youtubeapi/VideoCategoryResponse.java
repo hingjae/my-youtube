@@ -22,11 +22,10 @@ public class VideoCategoryResponse {
         }
 
         public Category toEntity() {
-            return com.honey.myyoutube.domain.Category.builder()
+            return Category.builder()
                     .id(id)
                     .title(snippet.title)
                     .build();
         }
     }
 }
-
