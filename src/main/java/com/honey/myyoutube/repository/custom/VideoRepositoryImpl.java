@@ -22,14 +22,15 @@ import static com.honey.myyoutube.domain.QChannel.channel;
 import static com.honey.myyoutube.domain.QTrendingVideo.trendingVideo;
 import static com.honey.myyoutube.domain.QVideo.video;
 
-public class VideoRepositoryImpl implements VideoRepositorySearch{
+public class VideoRepositoryImpl implements VideoSearchRepository {
 
     private final JPAQueryFactory query;
 
     public VideoRepositoryImpl(EntityManager em) {
         this.query = new JPAQueryFactory(em);
     }
-    //TODO: order by 트랜딩 비디오 점수 순으로 바꾸기
+
+    //TODO: order by 트랜딩 비디오 점수 순으로 바꾸기, 오늘꺼 데이터를 검색하는 경우 todayTrendingVideo 테이블을 대상으로 쿼리를 날려야함.
     @Override
     public Page<VideoSimple> findTodayVideoPageBySearchCondition(Pageable pageable, VideoSearchCondition condition) {
         BooleanBuilder categoryBuilder = categoryCondition(condition);
@@ -79,6 +80,8 @@ public class VideoRepositoryImpl implements VideoRepositorySearch{
         return new PageImpl<>(content, pageable, total);
 
     }
+
+    //TODO: order by 점수 정렬로 바꾸기
     @Override
     public Page<VideoSimple> findBeforeDayVideoPageBySearchCondition(Pageable pageable, VideoSearchCondition condition) {
         BooleanBuilder categoryBuilder = categoryCondition(condition);

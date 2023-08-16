@@ -5,7 +5,7 @@ import com.honey.myyoutube.dto.view.CategoryDto;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface CategorySearch {
+public interface CategorySearchRepository {
     List<CategoryDto> findTodayDataByCondition(LocalDate date);
 
     List<CategoryDto> findBeforeDayDataByCondition(LocalDate date);
