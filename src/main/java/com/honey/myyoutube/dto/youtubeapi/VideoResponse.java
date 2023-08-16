@@ -50,18 +50,11 @@ public class VideoResponse {
             private long commentCount;
         }
 
-        public TrendingVideo toTrendingVideoEntity(Calendar now) {
-            return TrendingVideo.builder()
-                    .video(toVideoEntity())
-                    .calendar(now)
-                    .build();
-        }
-
-        public Video toVideoEntity() {
+        public Video toVideoEntity(Category category, Channel channel) {
             return Video.builder()
                     .id(id)
-                    .category(toCategory())
-                    .channel(toChannel())
+                    .category(category)
+                    .channel(channel)
                     .title(snippet.title)
                     .description(snippet.description)
                     .thumbnails(snippet.thumbnails.high.url)
@@ -69,12 +62,6 @@ public class VideoResponse {
                     .viewCount(statistics.viewCount)
                     .likeCount(statistics.likeCount)
                     .commentCount(statistics.commentCount)
-                    .build();
-        }
-
-        private Category toCategory() {
-            return Category.builder()
-                    .id(snippet.categoryId)
                     .build();
         }
 

@@ -1,7 +1,6 @@
 package com.honey.myyoutube.service;
 
-import com.honey.myyoutube.domain.Calendar;
-import com.honey.myyoutube.domain.Category;
+import com.honey.myyoutube.domain.*;
 import com.honey.myyoutube.dto.youtubeapi.VideoCategoryResponse;
 import com.honey.myyoutube.dto.youtubeapi.VideoCategoryResponse.VideoCategoryDto;
 import com.honey.myyoutube.dto.youtubeapi.VideoResponse.YoutubeVideoDto;
@@ -35,17 +34,19 @@ public class LoadDataService {
 
     private void saveData(List<YoutubeVideoDto> response, LocalDateTime now) {
         Calendar nowCalendar = saveCalendar(now);
-        response.stream().forEach(videoDto -> {
-            checkCategory(videoDto);
-            channelRepository.save(videoDto.toChannel());
-            videoRepository.save(videoDto.toVideoEntity());
-            trendingVideoRepository.save(videoDto.toTrendingVideoEntity(nowCalendar));
-        });
+        int score = response.size();
+        for (YoutubeVideoDto youtubeVideoDto : response) {
+            Category category = checkCategory(youtubeVideoDto);
+            Channel channel = channelRepository.save(youtubeVideoDto.toChannel());
+            Video video = videoRepository.save(youtubeVideoDto.toVideoEntity(category, channel));
+            trendingVideoRepository.save(TrendingVideo.of(video, nowCalendar, score));
+            score--;
+        }
     }
 
-    private void checkCategory(YoutubeVideoDto videoDto) {
+    private Category checkCategory(YoutubeVideoDto videoDto) {
         String categoryId = videoDto.getSnippet().getCategoryId();
-        Category category = categoryRepository.findById(categoryId)
+        return categoryRepository.findById(categoryId) // 카테고리를 찾고 1차 캐시에 저장.
                 .orElseGet(() -> {
                     Category newCategory = Category.builder()
                             .id("others")
