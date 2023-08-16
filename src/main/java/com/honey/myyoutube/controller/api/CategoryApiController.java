@@ -14,6 +14,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 테스트 용 api
+ * 날짜 별 인기동영상의 존재하는 카테고리, 카테고리 별 개수 조회용
+ */
 @RestController
 @RequiredArgsConstructor
 public class CategoryApiController {
@@ -21,6 +25,11 @@ public class CategoryApiController {
     private final LocalDateTime localDateTime;
     private final CategoryService categoryService;
 
+    /**
+     * 검색하는 날짜에 존재하는 동영상의 모든 카테고리를 가져옴
+     * @param searchDate 날짜로 검색
+     * @return 카테고리 DTO - 카테고리id, 카테고리 이름, 존재하는 동영상 개수
+     */
     @GetMapping("/api/categories")
     public ResponseEntity<List<CategoryDto>> getCategoryList(
             @RequestParam(name = "searchDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate searchDate

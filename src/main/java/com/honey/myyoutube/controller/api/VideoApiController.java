@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * 동영상을 2 페이지부터 비동기로 가져올 때 이 api를 사용한다.
+ * 날짜와 카테고리를 파라미터로 넣어 검색가능
+ */
 @RequiredArgsConstructor
 @RestController
 public class VideoApiController {
@@ -29,7 +33,7 @@ public class VideoApiController {
      * @param searchDate 조건 : 날짜
      * @param categoryId 조건 : 카테고리
      * @param pageable
-     * @return 오늘 날짜 데이터를 검색하는 경우 최신순으로, 과거 데이터를 검색하는 경우 조회수 순으로 리턴한다.
+     * @return 오늘 날짜 데이터를 검색하는 경우 최신순으로 과거 데이터의 경우 score 순으로.
      */
     @GetMapping("/api/videos")
     public ResponseEntity<Page<VideoSimple>> getVideoList(

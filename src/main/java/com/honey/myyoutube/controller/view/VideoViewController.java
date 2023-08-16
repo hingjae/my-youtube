@@ -32,6 +32,15 @@ public class VideoViewController {
     private final VideoService videoService;
     private final CategoryService categoryService;
 
+    /**
+     * my youtube 홈 날짜와 카테고리를 입력해서 동영상을 검색할 수 있음.
+     * 동영상 리스트의 첫 페이지는 템플릿 엔진을 사용하고, 2 페이지 부터는 VideoApiController를 사용해서
+     * 비동기로 데이터를 가져와야함.
+     * @param searchDate 검색 날짜
+     * @param categoryId 카테고리 id
+     * @param pageable 페이지
+     * @return
+     */
     @GetMapping
     public String getVideos(
             @RequestParam(name = "searchDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate searchDate,
@@ -48,10 +57,14 @@ public class VideoViewController {
         return "videos";
     }
 
+    /**
+     * 비디오 썸네일 클릭시 반환되는 비디오 시청 뷰
+     * @param videoId 단건조회할 때 사용되는 비디오 Id (유튜브 video 고유 id와 같다)
+     * @return
+     */
     @GetMapping("/{videoId}")
     public String getVideo(@PathVariable String videoId, Model model) {
         VideoDetail video = videoService.getVideo(videoId);
-//        System.out.println("video = " + video);
         model.addAttribute("video", video);
         return "video";
     }
