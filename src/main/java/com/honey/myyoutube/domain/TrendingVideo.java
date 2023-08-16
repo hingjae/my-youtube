@@ -24,10 +24,21 @@ public class TrendingVideo {
     @JoinColumn(name = "calendar_id")
     private Calendar calendar;
 
+    private double score;
+
     @Builder
-    private TrendingVideo(Long id, Video video, Calendar calendar) {
+    private TrendingVideo(Long id, Video video, Calendar calendar, double score) {
         this.id = id;
         this.video = video;
         this.calendar = calendar;
+        this.score = score;
+    }
+
+    public static TrendingVideo of(Video video, Calendar calendar, double score) {
+        return TrendingVideo.builder()
+                .video(video)
+                .calendar(calendar)
+                .score(score)
+                .build();
     }
 }
