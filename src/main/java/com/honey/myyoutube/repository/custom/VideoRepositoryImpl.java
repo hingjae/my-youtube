@@ -19,6 +19,7 @@ import java.util.Optional;
 import static com.honey.myyoutube.domain.QCalendar.calendar;
 import static com.honey.myyoutube.domain.QCategory.category;
 import static com.honey.myyoutube.domain.QChannel.channel;
+import static com.honey.myyoutube.domain.QTodayTrendingVideo.todayTrendingVideo;
 import static com.honey.myyoutube.domain.QTrendingVideo.trendingVideo;
 import static com.honey.myyoutube.domain.QVideo.video;
 
@@ -30,9 +31,53 @@ public class VideoRepositoryImpl implements VideoSearchRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    //TODO: order by 트랜딩 비디오 점수 순으로 바꾸기, 오늘꺼 데이터를 검색하는 경우 todayTrendingVideo 테이블을 대상으로 쿼리를 날려야함.
     @Override
     public Page<VideoSimple> findTodayVideoPageBySearchCondition(Pageable pageable, VideoSearchCondition condition) {
+        BooleanBuilder categoryBuilder = categoryCondition(condition);
+        List<VideoSimple> content = query
+                .select(Projections.constructor(VideoSimple.class,
+                        video.id,
+                        video.title,
+                        video.thumbnails,
+                        video.publishedAt,
+                        channel.title,
+                        video.viewCount
+                ))
+                .from(todayTrendingVideo)
+                .join(todayTrendingVideo.video, video)
+                .join(video.category, category)
+                .join(video.channel, channel)
+                .where(todayTrendingVideo.trendTime.eq(JPAExpressions
+                                        .select(todayTrendingVideo.trendTime.max())
+                                        .from(todayTrendingVideo)
+                                )
+                                .and(categoryBuilder)
+                )
+                .orderBy(todayTrendingVideo.score.desc())
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+
+        Long total = query
+                .select(video.count())
+                .from(todayTrendingVideo)
+                .join(todayTrendingVideo.video, video)
+                .join(video.category, category)
+                .where(
+                        todayTrendingVideo.trendTime.eq(JPAExpressions
+                                        .select(todayTrendingVideo.trendTime.max())
+                                        .from(todayTrendingVideo)
+                                )
+                                .and(categoryBuilder)
+                )
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, total);
+
+    }
+
+    @Override
+    public Page<VideoSimple> findBeforeDayVideoPageBySearchCondition(Pageable pageable, VideoSearchCondition condition) {
         BooleanBuilder categoryBuilder = categoryCondition(condition);
         List<VideoSimple> content = query
                 .select(Projections.constructor(VideoSimple.class,
@@ -49,77 +94,20 @@ public class VideoRepositoryImpl implements VideoSearchRepository {
                 .join(video.channel, channel)
                 .join(video.category, category)
                 .where(
-                        calendar.calendarDateTime.eq(
-                                JPAExpressions
-                                        .select(calendar.calendarDateTime.max())
-                                        .from(calendar)
-                                )
-                                .and(categoryBuilder)
-                )
-                .orderBy(trendingVideo.id.asc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        //trendingVideo.count() 를 사용하면 count(trendingVideo.id) 로 처리됩니다.
-        Long total = query
-                .select(video.count())
-                .from(trendingVideo)
-                .join(trendingVideo.video, video)
-                .join(trendingVideo.calendar, calendar)
-                .join(video.category, category)
-                .where(
-                        calendar.calendarDateTime.eq(
-                                JPAExpressions
-                                        .select(calendar.calendarDateTime.max())
-                                        .from(calendar))
-                                .and(categoryBuilder)
-                )
-                .fetchOne();
-
-        return new PageImpl<>(content, pageable, total);
-
-    }
-
-    //TODO: order by 점수 정렬로 바꾸기
-    @Override
-    public Page<VideoSimple> findBeforeDayVideoPageBySearchCondition(Pageable pageable, VideoSearchCondition condition) {
-        BooleanBuilder categoryBuilder = categoryCondition(condition);
-        List<VideoSimple> content = query
-                .selectDistinct(Projections.constructor(VideoSimple.class,
-                        video.id,
-                        video.title,
-                        video.thumbnails,
-                        video.publishedAt,
-                        channel.title,
-                        video.viewCount
-                ))
-                .from(trendingVideo)
-                .join(trendingVideo.video, video)
-                .join(trendingVideo.calendar, calendar)
-                .join(video.channel, channel)
-                .join(video.category, category)
-                .where(
                         calendar.calendarDate.eq(condition.getSearchDate()).and(categoryBuilder)
                 )
-                .orderBy(video.viewCount.desc())
-                .offset(pageable.getOffset())
+                .orderBy(trendingVideo.score.desc())
                 .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
                 .fetch();
 
         Long total = query
                 .select(video.count())
-                .from(video)
-                .where(
-                        video.id.in(
-                                JPAExpressions.selectDistinct(video.id)
-                                    .from(trendingVideo)
-                                    .join(trendingVideo.calendar, calendar)
-                                    .join(trendingVideo.video, video)
-                                    .join(video.category, category)
-                                    .where(calendar.calendarDate.eq(condition.getSearchDate()).and(categoryBuilder))
-                        )
-                )
+                .from(trendingVideo)
+                .join(trendingVideo.video, video)
+                .join(trendingVideo.calendar, calendar)
+                .join(video.category, category)
+                .where(calendar.calendarDate.eq(condition.getSearchDate()).and(categoryBuilder))
                 .fetchOne();
 
         return new PageImpl<>(content, pageable, total);

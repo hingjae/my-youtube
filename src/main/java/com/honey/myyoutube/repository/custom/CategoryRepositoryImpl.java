@@ -11,6 +11,7 @@ import java.util.List;
 
 import static com.honey.myyoutube.domain.QCalendar.calendar;
 import static com.honey.myyoutube.domain.QCategory.category;
+import static com.honey.myyoutube.domain.QTodayTrendingVideo.todayTrendingVideo;
 import static com.honey.myyoutube.domain.QTrendingVideo.trendingVideo;
 import static com.honey.myyoutube.domain.QVideo.video;
 
@@ -22,9 +23,25 @@ public class CategoryRepositoryImpl implements CategorySearchRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    //TODO: 오늘꺼 데이터 조회할 때 TodayTrendingVideo 테이블에서 조회하도록 수정하기
     @Override
     public List<CategoryDto> findTodayDataByCondition(LocalDate searchDate) {
+        return query
+                .select(Projections.constructor(CategoryDto.class,
+                    category.id, category.title, video.count()
+                ))
+                .from(todayTrendingVideo)
+                .join(todayTrendingVideo.video, video)
+                .join(video.category, category)
+                .where(todayTrendingVideo.trendTime.eq(JPAExpressions
+                        .select(todayTrendingVideo.trendTime.max())
+                        .from(todayTrendingVideo)
+                ))
+                .groupBy(category)
+                .fetch();
+    }
+
+    @Override
+    public List<CategoryDto> findBeforeDayDataByCondition(LocalDate searchDate) {
         return query
                 .select(Projections.constructor(CategoryDto.class,
                         category.id, category.title, video.count()
@@ -33,32 +50,7 @@ public class CategoryRepositoryImpl implements CategorySearchRepository {
                 .join(trendingVideo.video, video)
                 .join(trendingVideo.calendar, calendar)
                 .join(video.category, category)
-                .where(
-                        calendar.calendarDateTime.eq(JPAExpressions
-                                .select(calendar.calendarDateTime.max())
-                                .from(calendar)
-                        )
-                )
-                .groupBy(category)
-                .fetch();
-    }
-
-    //TODO: 전면 수정 필요 (서브 쿼리 사용하지 않아도 될듯.)
-    @Override
-    public List<CategoryDto> findBeforeDayDataByCondition(LocalDate searchDate) {
-        return query
-                .select(Projections.constructor(CategoryDto.class,
-                        category.id, category.title, video.count()
-                ))
-                .from(video)
-                .join(video.category, category)
-                .where(video.id.in(
-                        JPAExpressions.selectDistinct(video.id)
-                                .from(trendingVideo)
-                                .join(trendingVideo.video, video)
-                                .join(trendingVideo.calendar, calendar)
-                                .where(calendar.calendarDate.eq(searchDate))
-                ))
+                .where(calendar.calendarDate.eq(searchDate))
                 .groupBy(category)
                 .fetch();
     }
