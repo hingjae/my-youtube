@@ -22,7 +22,9 @@ public class VideoService {
     private final VideoRepository videoRepository;
     private final LocalDateTime localDateTime;
 
-
+    /**
+     * 오늘 데이터 검색과 과거 데이터 검색 메서드가 각각 다름
+     */
     public Page<VideoSimple> searchVideoList(Pageable pageable, VideoSearchCondition condition) {
         Page<VideoSimple> result;
         if (isToday(condition.getSearchDate())) {

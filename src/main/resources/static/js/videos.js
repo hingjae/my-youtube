@@ -95,6 +95,9 @@ function formatDate(inputDateStr) {
     return `${year}-${month}-${day}`;
 }
 
+/**
+ * 카테고리 선택에 따라 비동기로 해당 카테고리 동영상을 가져옴.
+ */
 function chooseCategory(button) {
     let categoryBtn = document.querySelector('.btn-secondary');
     if (categoryBtn !== null) {

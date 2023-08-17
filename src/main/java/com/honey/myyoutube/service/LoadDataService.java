@@ -21,11 +21,16 @@ public class LoadDataService {
 
     private final YoutubeApi youtubeApi;
     private final CategoryRepository categoryRepository;
-    private final TrendingVideoRepository trendingVideoRepository;
     private final ChannelRepository channelRepository;
-    private final CalendarRepository calendarRepository;
     private final VideoRepository videoRepository;
+    private final TrendingVideoRepository trendingVideoRepository;
+    private final TodayTrendingVideoRepository todayTrendingVideoRepository;
+    private final CalendarRepository calendarRepository;
 
+    /**
+     * 유튜브 인기동영상 api 호출
+     * 200개의 동영상을 받아와 DB에 저장
+     */
     public List<YoutubeVideoDto> loadVideos(int pageSize, String pageToken, LocalDateTime nowDateTime) {
         List<YoutubeVideoDto> response = youtubeApi.loadVideoApi(pageSize, pageToken);
         saveData(response, nowDateTime);
@@ -33,13 +38,12 @@ public class LoadDataService {
     }
 
     private void saveData(List<YoutubeVideoDto> response, LocalDateTime now) {
-        Calendar nowCalendar = saveCalendar(now);
         int score = response.size();
         for (YoutubeVideoDto youtubeVideoDto : response) {
             Category category = checkCategory(youtubeVideoDto);
             Channel channel = channelRepository.save(youtubeVideoDto.toChannel());
             Video video = videoRepository.save(youtubeVideoDto.toVideoEntity(category, channel));
-            trendingVideoRepository.save(TrendingVideo.of(video, nowCalendar, score));
+            todayTrendingVideoRepository.save(TodayTrendingVideo.of(video, now, score));
             score--;
         }
     }
@@ -54,15 +58,6 @@ public class LoadDataService {
                             .build();
                     return categoryRepository.save(newCategory);
                 });
-    }
-
-    private Calendar saveCalendar(LocalDateTime now) {
-        return calendarRepository.save(
-                Calendar.builder()
-                        .calendarDate(now.toLocalDate())
-                        .calendarDateTime(now)
-                        .build()
-                );
     }
 
     @Transactional
