@@ -1,6 +1,5 @@
 package com.honey.myyoutube.controller.view;
 
-import com.honey.myyoutube.controller.api.VideoApiController;
 import com.honey.myyoutube.dto.searchcondition.VideoSearchCondition;
 import com.honey.myyoutube.dto.view.CategoryDto;
 import com.honey.myyoutube.dto.view.VideoDetail;

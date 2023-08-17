@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @ToString(callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,12 +18,16 @@ public class Calendar {
     private Long id;
 
     private LocalDate calendarDate;
-    private LocalDateTime calendarDateTime;
 
     @Builder
-    private Calendar(Long id, LocalDate calendarDate, LocalDateTime calendarDateTime) {
+    private Calendar(Long id, LocalDate calendarDate) {
         this.id = id;
         this.calendarDate = calendarDate;
-        this.calendarDateTime = calendarDateTime;
+    }
+
+    public static Calendar of(LocalDate calendarDate) {
+        return Calendar.builder()
+                .calendarDate(calendarDate)
+                .build();
     }
 }

@@ -32,7 +32,7 @@ public class VideoApiController {
      * DB에 저장된 비디오를 조건을 반영해서 검색한다.
      * @param searchDate 조건 : 날짜
      * @param categoryId 조건 : 카테고리
-     * @param pageable
+     * @param pageable 페이지 offset과 size
      * @return 오늘 날짜 데이터를 검색하는 경우 최신순으로 과거 데이터의 경우 score 순으로.
      */
     @GetMapping("/api/videos")
