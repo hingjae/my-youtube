@@ -30,4 +30,12 @@ public class TodayTrendingVideo {
         this.trendTime = trendTime;
         this.score = score;
     }
+
+    public static TodayTrendingVideo of(Video video, LocalDateTime trendTime, int score) {
+        return TodayTrendingVideo.builder()
+                .video(video)
+                .trendTime(trendTime)
+                .score(score)
+                .build();
+    }
 }

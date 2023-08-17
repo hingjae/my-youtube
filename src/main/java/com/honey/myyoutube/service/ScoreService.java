@@ -4,6 +4,8 @@ import com.honey.myyoutube.domain.Calendar;
 import com.honey.myyoutube.domain.TrendingVideo;
 import com.honey.myyoutube.domain.Video;
 import com.honey.myyoutube.dto.score.VideoScore;
+import com.honey.myyoutube.repository.CalendarRepository;
+import com.honey.myyoutube.repository.TodayTrendingVideoRepository;
 import com.honey.myyoutube.repository.TrendingVideoRepository;
 import com.honey.myyoutube.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,20 +20,36 @@ import java.util.stream.Collectors;
 @Transactional
 @Service
 public class ScoreService {
+    private final TodayTrendingVideoRepository todayTrendingVideoRepository;
     private final TrendingVideoRepository trendingVideoRepository;
     private final VideoRepository videoRepository;
+    private final CalendarRepository calendarRepository;
+
+
+    /**
+     * 오늘 인기 비디오 데이터 평균 점수 계산 -> 점수는 과거 비디오 데이터를 조회할 때 정렬하기 위해 사용
+     * @param
+     */
     public void processDailyData(LocalDate today) {
-        List<VideoScore> videoScoreList = trendingVideoRepository.getVideoScore(today); // 오늘 비디오 별 평균 점수 리스트
-        trendingVideoRepository.deleteTodayData(today); // 오늘 자 비디오 삭제
-        Calendar calendar = Calendar.builder().calendarDate(today).build(); //
+        List<VideoScore> videoScoreList = todayTrendingVideoRepository.getVideoScore();
+        Calendar calendar = calendarRepository.save(Calendar.of(today));
+        saveTodayTrendingVideo(videoScoreList, calendar);
+        deleteTodayTrendingVideo(today);
+    }
+
+    private void deleteTodayTrendingVideo(LocalDate today) {
+        todayTrendingVideoRepository.deleteAll();
+    }
+
+    private void saveTodayTrendingVideo(List<VideoScore> videoScoreList, Calendar calendar) {
         trendingVideoRepository.saveAll(
                 videoScoreList.stream()
                         .map((videoScore) -> {
                             Video video = videoRepository.getReferenceById(videoScore.getVideoId());
-                            return TrendingVideo.of(video, calendar, videoScore.getScore());
+                            double score = videoScore.getScore();
+                            return TrendingVideo.of(video, calendar, score);
                         })
                         .collect(Collectors.toList())
         );
-
     }
 }
