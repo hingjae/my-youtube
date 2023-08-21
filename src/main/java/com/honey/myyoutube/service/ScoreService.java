@@ -31,14 +31,10 @@ public class ScoreService {
      * @param
      */
     public void processDailyData(LocalDate today) {
-        List<VideoScore> videoScoreList = todayTrendingVideoRepository.getVideoScore();
+        List<VideoScore> videoScoreList = todayTrendingVideoRepository.getVideoScore(); // video id와 평균점수 get
         Calendar calendar = calendarRepository.save(Calendar.of(today));
         saveTodayTrendingVideo(videoScoreList, calendar);
         deleteTodayTrendingVideo(today);
-    }
-
-    private void deleteTodayTrendingVideo(LocalDate today) {
-        todayTrendingVideoRepository.deleteAll();
     }
 
     private void saveTodayTrendingVideo(List<VideoScore> videoScoreList, Calendar calendar) {
@@ -51,5 +47,9 @@ public class ScoreService {
                         })
                         .collect(Collectors.toList())
         );
+    }
+
+    private void deleteTodayTrendingVideo(LocalDate today) {
+        todayTrendingVideoRepository.deleteAll();
     }
 }
