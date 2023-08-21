@@ -1,25 +1,21 @@
 spring:
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     properties:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
-    defer-datasource-initialization: true
     open-in-view: false
 
 youtube:
   video_url: https://www.googleapis.com/youtube/v3/videos
   video_category_url: https://www.googleapis.com/youtube/v3/videoCategories
-  key: ${YOUTUBE_API_KEY}
+  key: ${YOUTUBE_KEY}
 
 logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type.descriptor.sql.BasicBinder: trace
-server:
-  port: ${SERVER_PORT}
