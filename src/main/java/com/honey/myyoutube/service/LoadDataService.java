@@ -23,9 +23,7 @@ public class LoadDataService {
     private final CategoryRepository categoryRepository;
     private final ChannelRepository channelRepository;
     private final VideoRepository videoRepository;
-    private final TrendingVideoRepository trendingVideoRepository;
     private final TodayTrendingVideoRepository todayTrendingVideoRepository;
-    private final CalendarRepository calendarRepository;
 
     /**
      * 유튜브 인기동영상 api 호출
