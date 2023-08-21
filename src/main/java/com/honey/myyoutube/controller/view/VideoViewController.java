@@ -26,7 +26,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Controller
 public class VideoViewController {
-    //TODO: localDateTime o
 
     private final VideoService videoService;
     private final CategoryService categoryService;

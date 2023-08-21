@@ -22,7 +22,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryApiController {
 
-    //TODO: localDateTime o
     private final CategoryService categoryService;
 
     /**

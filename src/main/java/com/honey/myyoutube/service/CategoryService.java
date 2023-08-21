@@ -16,7 +16,6 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-    //TODO: localDateTime o
 
     /**
      * 날짜별 비디오에 존재하는 카테고리 검색

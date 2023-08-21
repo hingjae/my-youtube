@@ -20,7 +20,6 @@ import java.time.ZoneId;
 public class VideoService {
 
     private final VideoRepository videoRepository;
-    //TODO: localDateTime o
 
     /**
      * 오늘 데이터 검색과 과거 데이터 검색 메서드가 각각 다름

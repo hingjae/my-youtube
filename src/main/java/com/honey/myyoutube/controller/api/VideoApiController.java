@@ -26,7 +26,6 @@ import java.time.ZoneId;
 public class VideoApiController {
 
     private final VideoService videoService;
-    //TODO: localDateTime o
 
     /**
      * DB에 저장된 비디오를 조건을 반영해서 검색한다.
