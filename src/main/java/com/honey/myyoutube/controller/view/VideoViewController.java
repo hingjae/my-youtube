@@ -19,15 +19,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @RequestMapping("/videos")
 @RequiredArgsConstructor
 @Controller
 public class VideoViewController {
+    //TODO: localDateTime o
 
-    private final LocalDateTime localDateTime;
     private final VideoService videoService;
     private final CategoryService categoryService;
 
@@ -47,7 +47,7 @@ public class VideoViewController {
             @PageableDefault(size = 20, page = 0) Pageable pageable,
             Model model
     ) {
-        if (searchDate == null) {searchDate = localDateTime.now().toLocalDate();}
+        if (searchDate == null) {searchDate = LocalDate.now(ZoneId.of("Asia/Seoul"));}
         Page<VideoSimple> videos = videoService.searchVideoList(pageable, VideoSearchCondition.of(searchDate, categoryId));
         List<CategoryDto> categories = categoryService.searchCategoryList(searchDate);
         model.addAttribute("searchDate", searchDate);

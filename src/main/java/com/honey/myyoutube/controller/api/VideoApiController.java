@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /**
  * 동영상을 2 페이지부터 비동기로 가져올 때 이 api를 사용한다.
@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 public class VideoApiController {
 
     private final VideoService videoService;
-    private final LocalDateTime localDateTime;
+    //TODO: localDateTime o
 
     /**
      * DB에 저장된 비디오를 조건을 반영해서 검색한다.
@@ -41,7 +41,7 @@ public class VideoApiController {
             @RequestParam(name = "categoryId", required = false) String categoryId,
             @PageableDefault(size = 20, page = 0) Pageable pageable
     ) {
-        if (searchDate == null) {searchDate = localDateTime.toLocalDate().now();}
+        if (searchDate == null) {searchDate = LocalDate.now(ZoneId.of("Asia/Seoul"));}
         Page<VideoSimple> videoSimples = videoService.searchVideoList(pageable, VideoSearchCondition.of(searchDate, categoryId));
         return ResponseEntity.status(HttpStatus.OK)
                 .body(videoSimples);

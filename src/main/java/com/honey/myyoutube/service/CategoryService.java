@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -16,7 +16,7 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-    private final LocalDateTime localDateTime;
+    //TODO: localDateTime o
 
     /**
      * 날짜별 비디오에 존재하는 카테고리 검색
@@ -36,6 +36,6 @@ public class CategoryService {
     }
 
     private boolean isToday(LocalDate condition) {
-        return condition.isEqual(localDateTime.now().toLocalDate());
+        return condition.isEqual(LocalDate.now(ZoneId.of("Asia/Seoul")));
     }
 }

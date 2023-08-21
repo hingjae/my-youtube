@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class VideoService {
 
     private final VideoRepository videoRepository;
-    private final LocalDateTime localDateTime;
+    //TODO: localDateTime o
 
     /**
      * 오늘 데이터 검색과 과거 데이터 검색 메서드가 각각 다름
@@ -36,7 +36,7 @@ public class VideoService {
     }
 
     private boolean isToday(LocalDate condition) {
-        return condition.isEqual(localDateTime.now().toLocalDate());
+        return condition.isEqual(LocalDate.now(ZoneId.of("Asia/Seoul")));
     }
 
     public VideoDetail getVideo(String videoId) {

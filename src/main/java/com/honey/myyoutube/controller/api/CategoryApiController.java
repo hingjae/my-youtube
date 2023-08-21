@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 /**
@@ -22,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryApiController {
 
-    private final LocalDateTime localDateTime;
+    //TODO: localDateTime o
     private final CategoryService categoryService;
 
     /**
@@ -34,7 +34,7 @@ public class CategoryApiController {
     public ResponseEntity<List<CategoryDto>> getCategoryList(
             @RequestParam(name = "searchDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate searchDate
     ) {
-        if (searchDate == null) {searchDate = localDateTime.toLocalDate().now();}
+        if (searchDate == null) {searchDate = LocalDate.now(ZoneId.of("Asia/Seoul"));}
         List<CategoryDto> categoryList = categoryService.searchCategoryList(searchDate);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(categoryList);
