@@ -27,7 +27,7 @@ public class LoadDataService {
 
     /**
      * 유튜브 인기동영상 api 호출
-     * 200개의 동영상을 받아와 DB에 저장
+     * 동영상을 받아와 DB에 저장
      */
     public List<YoutubeVideoDto> loadVideos(int pageSize, String pageToken, LocalDateTime nowDateTime) {
         List<YoutubeVideoDto> response = youtubeApi.loadVideoApi(pageSize, pageToken);
@@ -35,6 +35,9 @@ public class LoadDataService {
         return response;
     }
 
+    /**
+     * 동영상마다 1점씩 내림차순으로 점수를 매겨 저장
+     */
     private void saveData(List<YoutubeVideoDto> response, LocalDateTime now) {
         int score = response.size();
         for (YoutubeVideoDto youtubeVideoDto : response) {

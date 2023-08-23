@@ -22,9 +22,9 @@ public class YoutubeApi {
         List<YoutubeVideoDto> result = new ArrayList<>();
         while (true) {
             URI uri = uriBuilder.buildLoadVideoUri(pageSize, pageToken);
-            VideoResponse response = restTemplate.getForObject(uri, VideoResponse.class);
+            VideoResponse response = restTemplate.getForObject(uri, VideoResponse.class); // 유튜브 api 호출
             result.addAll(response.getItems());
-            String nextPageToken = response.getNextPageToken();
+            String nextPageToken = response.getNextPageToken(); // 다음 페이지 토큰 얻기
             if (nextPageToken == null) break;
             pageToken = nextPageToken;
         }

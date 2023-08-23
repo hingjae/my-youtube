@@ -4,6 +4,7 @@ import com.honey.myyoutube.config.YoutubeProperties;
 import com.honey.myyoutube.dto.youtubeapi.VideoCategoryResponse;
 import com.honey.myyoutube.dto.youtubeapi.VideoResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,7 +37,8 @@ public class YoutubeApiController {
             @RequestParam(required = false) String pageToken) {
         URI uri = buildLoadVideoUri(pageSize, pageToken);
         VideoResponse response = restTemplate.getForObject(uri, VideoResponse.class);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(response);
     }
 
     private URI buildLoadVideoUri(int pageSize, String pageToken) {
@@ -60,7 +62,8 @@ public class YoutubeApiController {
     public ResponseEntity<VideoCategoryResponse> setCategory() {
         URI uri = buildLoadCategoryUri();
         VideoCategoryResponse response = restTemplate.getForObject(uri, VideoCategoryResponse.class);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(response);
     }
 
     private URI buildLoadCategoryUri() {
