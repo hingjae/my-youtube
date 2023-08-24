@@ -4,7 +4,7 @@ import com.honey.myyoutube.dto.score.VideoScore;
 
 import java.util.List;
 
-public interface ScoreCalculator {
+public interface TodayTrendingVideoRepositoryCustom {
     List<VideoScore> getVideoScore();
 
 }

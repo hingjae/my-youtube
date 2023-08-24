@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
-public interface VideoSearchRepository {
+public interface VideoRepositoryCustom {
     Page<VideoSimple> findTodayVideoPageBySearchCondition(Pageable pageable, VideoSearchCondition condition);
 
     Page<VideoSimple> findBeforeDayVideoPageBySearchCondition(Pageable pageable, VideoSearchCondition condition);
