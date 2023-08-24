@@ -4,8 +4,8 @@ import com.honey.myyoutube.dto.view.CategoryDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -15,13 +15,10 @@ import static com.honey.myyoutube.domain.QTodayTrendingVideo.todayTrendingVideo;
 import static com.honey.myyoutube.domain.QTrendingVideo.trendingVideo;
 import static com.honey.myyoutube.domain.QVideo.video;
 
-public class CategoryRepositoryImpl implements CategorySearchRepository {
+@RequiredArgsConstructor
+public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
 
     private final JPAQueryFactory query;
-
-    public CategoryRepositoryImpl(EntityManager em) {
-        this.query = new JPAQueryFactory(em);
-    }
 
     @Override
     public List<CategoryDto> findTodayDataByCondition(LocalDate searchDate) {

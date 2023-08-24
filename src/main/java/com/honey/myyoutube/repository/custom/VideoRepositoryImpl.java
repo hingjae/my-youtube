@@ -7,12 +7,12 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,13 +23,10 @@ import static com.honey.myyoutube.domain.QTodayTrendingVideo.todayTrendingVideo;
 import static com.honey.myyoutube.domain.QTrendingVideo.trendingVideo;
 import static com.honey.myyoutube.domain.QVideo.video;
 
-public class VideoRepositoryImpl implements VideoSearchRepository {
+@RequiredArgsConstructor
+public class VideoRepositoryImpl implements VideoRepositoryCustom {
 
     private final JPAQueryFactory query;
-
-    public VideoRepositoryImpl(EntityManager em) {
-        this.query = new JPAQueryFactory(em);
-    }
 
     @Override
     public Page<VideoSimple> findTodayVideoPageBySearchCondition(Pageable pageable, VideoSearchCondition condition) {
