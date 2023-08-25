@@ -25,8 +25,13 @@ public class LoadDataScheduler {
      * 1시간 간격으로 유튜브 api를 호출해 데이터를 불러와 저장한다.
      */
     @Scheduled(cron = "5 0 * * * *", zone = "Asia/Seoul")
-    public void callLoadData() {
+    public void loadVideoData() {
         loadDataService.loadVideos(FIXED_PAGE_SIZE, FIRST_PAGE_TOKEN_IS_NULL, LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+    }
+
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
+    public void loadCategoryData() {
+        loadDataService.loadCategories();
     }
 
     /**
