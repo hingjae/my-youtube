@@ -1,10 +1,13 @@
 package com.honey.myyoutube.repository.custom;
 
+import com.honey.myyoutube.dto.searchcondition.MonthlyVideoSearchCondition;
 import com.honey.myyoutube.dto.searchcondition.VideoSearchCondition;
+import com.honey.myyoutube.dto.view.MonthlyVideoSimple;
 import com.honey.myyoutube.dto.view.VideoDetail;
 import com.honey.myyoutube.dto.view.VideoSimple;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -127,6 +130,52 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom {
                 .where(video.id.eq(videoId))
                 .fetchOne();
         return Optional.ofNullable(videoDetail);
+    }
+
+    @Override
+    public Page<MonthlyVideoSimple> findMonthlyVideoPage(Pageable pageable, MonthlyVideoSearchCondition condition) {
+        List<MonthlyVideoSimple> content = query
+                .select(Projections.constructor(MonthlyVideoSimple.class,
+                        video.id,
+                        video.title,
+                        video.thumbnails,
+                        video.publishedAt,
+                        channel.title,
+                        video.viewCount,
+                        trendingVideo.score.avg()
+                ))
+                .from(trendingVideo)
+                .join(trendingVideo.video, video)
+                .join(video.channel, channel)
+                .join(video.category, category)
+                .join(trendingVideo.calendar, calendar)
+                .where(
+                        calendar.calendarDate.between(condition.getStartOfMonth(), condition.getEndOfMonth()),
+                        categoryContains(condition.getCategoryId())
+                )
+                .groupBy(video)
+                .orderBy(trendingVideo.score.avg().desc())
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+
+        Long total = query
+                .select(video.countDistinct())
+                .from(trendingVideo)
+                .join(trendingVideo.video, video)
+                .join(trendingVideo.calendar, calendar)
+                .join(video.category, category)
+                .where(
+                        calendar.calendarDate.between(condition.getStartOfMonth(), condition.getEndOfMonth()),
+                        categoryContains(condition.getCategoryId())
+                )
+                .fetchOne();
+
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    private BooleanExpression categoryContains(String categoryId) {
+        return categoryId != null && StringUtils.hasText(categoryId) ? category.id.eq(categoryId) : null;
     }
 
     private BooleanBuilder categoryCondition(VideoSearchCondition condition) {

@@ -1,6 +1,8 @@
 package com.honey.myyoutube.service;
 
+import com.honey.myyoutube.dto.searchcondition.MonthlyVideoSearchCondition;
 import com.honey.myyoutube.dto.searchcondition.VideoSearchCondition;
+import com.honey.myyoutube.dto.view.MonthlyVideoSimple;
 import com.honey.myyoutube.dto.view.VideoDetail;
 import com.honey.myyoutube.dto.view.VideoSimple;
 import com.honey.myyoutube.repository.VideoRepository;
@@ -41,5 +43,9 @@ public class VideoService {
     public VideoDetail getVideo(String videoId) {
         return videoRepository.findByVideoId(videoId)
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 비디오 입니다."));
+    }
+
+    public Page<MonthlyVideoSimple> searchMonthlyVideoList(Pageable pageable, MonthlyVideoSearchCondition condition) {
+        return videoRepository.findMonthlyVideoPage(pageable, condition);
     }
 }

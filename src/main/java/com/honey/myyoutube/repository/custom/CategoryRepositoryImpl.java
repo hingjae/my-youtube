@@ -1,5 +1,6 @@
 package com.honey.myyoutube.repository.custom;
 
+import com.honey.myyoutube.dto.searchcondition.MonthlyVideoSearchCondition;
 import com.honey.myyoutube.dto.view.CategoryDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
@@ -48,6 +49,21 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
                 .join(trendingVideo.calendar, calendar)
                 .join(video.category, category)
                 .where(calendar.calendarDate.eq(searchDate))
+                .groupBy(category)
+                .fetch();
+    }
+
+    @Override
+    public List<CategoryDto> findMonthlyDataByCondition(MonthlyVideoSearchCondition condition) {
+        return query
+                .select(Projections.constructor(CategoryDto.class,
+                        category.id, category.title, video.id.countDistinct()
+                ))
+                .from(trendingVideo)
+                .join(trendingVideo.video, video)
+                .join(trendingVideo.calendar, calendar)
+                .join(video.category, category)
+                .where(calendar.calendarDate.between(condition.getStartOfMonth(), condition.getEndOfMonth()))
                 .groupBy(category)
                 .fetch();
     }

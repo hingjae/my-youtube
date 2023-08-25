@@ -1,6 +1,8 @@
 package com.honey.myyoutube.repository.custom;
 
+import com.honey.myyoutube.dto.searchcondition.MonthlyVideoSearchCondition;
 import com.honey.myyoutube.dto.searchcondition.VideoSearchCondition;
+import com.honey.myyoutube.dto.view.MonthlyVideoSimple;
 import com.honey.myyoutube.dto.view.VideoDetail;
 import com.honey.myyoutube.dto.view.VideoSimple;
 import org.springframework.data.domain.Page;
@@ -14,4 +16,6 @@ public interface VideoRepositoryCustom {
     Page<VideoSimple> findBeforeDayVideoPageBySearchCondition(Pageable pageable, VideoSearchCondition condition);
 
     Optional<VideoDetail> findByVideoId(String videoId);
+
+    Page<MonthlyVideoSimple> findMonthlyVideoPage(Pageable pageable, MonthlyVideoSearchCondition condition);
 }
