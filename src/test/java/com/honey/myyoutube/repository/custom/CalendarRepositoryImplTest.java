@@ -50,9 +50,9 @@ class CalendarRepositoryImplTest {
         List<YearMonthDto> yearMonthList = calendarRepository.findYearMonth();
         assertThat(yearMonthList).hasSize(3);
         assertThat(yearMonthList).containsExactly(
-                YearMonthDto.builder().year(2023).month(9).build(),
-                YearMonthDto.builder().year(2023).month(8).build(),
-                YearMonthDto.builder().year(2023).month(7).build()
+                new YearMonthDto(2023, 9),
+                new YearMonthDto(2023, 8),
+                new YearMonthDto(2023, 7)
         );
     }
 }

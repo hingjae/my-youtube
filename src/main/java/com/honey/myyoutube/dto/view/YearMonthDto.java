@@ -22,7 +22,6 @@ public class YearMonthDto {
         this.yearMonth = yearMonthParam;
     }
 
-    @Builder
     public YearMonthDto(Integer year, Integer month) {
         this.year = year;
         this.month = month;
