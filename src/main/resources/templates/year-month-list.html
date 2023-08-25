@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko" data-bs-theme="auto" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.115.4">
+    <title>My YouTube</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/videos.css">
+</head>
+<body>
+<header data-bs-theme="dark">
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a href="/videos" class="navbar-brand d-flex align-items-center">
+                <img class="sm" height="30" src="/img/star.png"/>
+                <strong>My YouTube</strong>
+            </a>
+            <div>
+                <a href="/search-month" class="px-2 text-secondary text-decoration-none">월별 검색</a>
+                <a href="/videos" class="px-2 text-secondary text-decoration-none">날짜 검색</a>
+            </div>
+        </div>
+    </div>
+</header>
+<main class="container">
+    <header class="py-5 text-center">
+        <h1>월별 검색</h1>
+    </header>
+
+    <section class="row">
+        <div class="col-9 d-flex flex-wrap justify-content-evenly">
+            <div th:each="yearMonth : ${yearMonthList}" class="p-2">
+                <h2 class="text-center lh-lg font-monospace"><a th:text="${yearMonth.year} + '년 ' + ${yearMonth.month} + '월'" th:href="@{'/search-month/'+${yearMonth.yearMonth}}">2023년 8월</a></h2>
+            </div>
+        </div>
+    </section>
+
+
+</main>
+</body>
+</html>
