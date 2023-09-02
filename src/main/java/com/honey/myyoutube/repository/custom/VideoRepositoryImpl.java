@@ -150,7 +150,8 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom {
                 .join(video.category, category)
                 .join(trendingVideo.calendar, calendar)
                 .where(
-                        calendar.calendarDate.between(condition.getStartOfMonth(), condition.getEndOfMonth()),
+                        calendar.calendarDate.year().eq(condition.getYear()),
+                        calendar.calendarDate.month().eq(condition.getMonth()),
                         categoryContains(condition.getCategoryId())
                 )
                 .groupBy(video)
@@ -166,7 +167,8 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom {
                 .join(trendingVideo.calendar, calendar)
                 .join(video.category, category)
                 .where(
-                        calendar.calendarDate.between(condition.getStartOfMonth(), condition.getEndOfMonth()),
+                        calendar.calendarDate.year().eq(condition.getYear()),
+                        calendar.calendarDate.month().eq(condition.getMonth()),
                         categoryContains(condition.getCategoryId())
                 )
                 .fetchOne();

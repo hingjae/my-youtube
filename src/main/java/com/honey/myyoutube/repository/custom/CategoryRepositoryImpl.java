@@ -63,7 +63,10 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
                 .join(trendingVideo.video, video)
                 .join(trendingVideo.calendar, calendar)
                 .join(video.category, category)
-                .where(calendar.calendarDate.between(condition.getStartOfMonth(), condition.getEndOfMonth()))
+                .where(
+                        calendar.calendarDate.year().eq(condition.getYear()),
+                        calendar.calendarDate.month().eq(condition.getMonth())
+                )
                 .groupBy(category)
                 .fetch();
     }

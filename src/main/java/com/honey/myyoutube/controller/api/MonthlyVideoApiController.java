@@ -19,6 +19,9 @@ public class MonthlyVideoApiController {
 
     private final VideoService videoService;
 
+    /**
+     * 월별 인기동영상 api
+     */
     @GetMapping("/api/monthly-videos")
     public ResponseEntity<Page<MonthlyVideoSimple>> getVideoList(
             @RequestParam(name = "yearMonth") String yearMonth,

@@ -28,6 +28,9 @@ public class MonthlyVideoViewController {
     private final CategoryService categoryService;
     private final VideoService videoService;
 
+    /**
+     * 현재 calendar 테이블에 존재하는 년-월 리스트를 불러오는 메서드
+     */
     @GetMapping
     public String getYearMonthList(Model model) {
         List<YearMonthDto> yearMonthList = monthSearchService.searchMonth();
@@ -35,8 +38,11 @@ public class MonthlyVideoViewController {
         return "year-month-list";
     }
 
+    /**
+     * 월별 인기동영상 검색 view
+     */
     @GetMapping("/{yearMonth}")
-    public String getYearMonthVideo(
+    public String getMonthlyVideo(
             @PageableDefault(size = 20, page = 0) Pageable pageable,
             @PathVariable("yearMonth") String yearMonth,
             String categoryId, Model model) {
