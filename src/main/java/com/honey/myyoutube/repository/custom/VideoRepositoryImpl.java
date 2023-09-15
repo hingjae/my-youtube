@@ -2,15 +2,17 @@ package com.honey.myyoutube.repository.custom;
 
 import com.honey.myyoutube.dto.searchcondition.MonthlyVideoSearchCondition;
 import com.honey.myyoutube.dto.searchcondition.VideoSearchCondition;
+import com.honey.myyoutube.dto.view.BeforeDayVideoSimple;
 import com.honey.myyoutube.dto.view.MonthlyVideoSimple;
 import com.honey.myyoutube.dto.view.VideoDetail;
-import com.honey.myyoutube.dto.view.VideoSimple;
+import com.honey.myyoutube.dto.view.TodayVideoSimple;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.lang.annotation.Before;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -32,16 +34,17 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom {
     private final JPAQueryFactory query;
 
     @Override
-    public Page<VideoSimple> findTodayVideoPageBySearchCondition(Pageable pageable, VideoSearchCondition condition) {
+    public Page<TodayVideoSimple> findTodayVideoPageBySearchCondition(Pageable pageable, VideoSearchCondition condition) {
         BooleanBuilder categoryBuilder = categoryCondition(condition);
-        List<VideoSimple> content = query
-                .select(Projections.constructor(VideoSimple.class,
+        List<TodayVideoSimple> content = query
+                .select(Projections.constructor(TodayVideoSimple.class,
                         video.id,
                         video.title,
                         video.thumbnails,
                         video.publishedAt,
                         channel.title,
-                        video.viewCount
+                        video.viewCount,
+                        todayTrendingVideo.score
                 ))
                 .from(todayTrendingVideo)
                 .join(todayTrendingVideo.video, video)
@@ -77,16 +80,17 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom {
     }
 
     @Override
-    public Page<VideoSimple> findBeforeDayVideoPageBySearchCondition(Pageable pageable, VideoSearchCondition condition) {
+    public Page<BeforeDayVideoSimple> findBeforeDayVideoPageBySearchCondition(Pageable pageable, VideoSearchCondition condition) {
         BooleanBuilder categoryBuilder = categoryCondition(condition);
-        List<VideoSimple> content = query
-                .select(Projections.constructor(VideoSimple.class,
+        List<BeforeDayVideoSimple> content = query
+                .select(Projections.constructor(BeforeDayVideoSimple.class,
                         video.id,
                         video.title,
                         video.thumbnails,
                         video.publishedAt,
                         channel.title,
-                        video.viewCount
+                        video.viewCount,
+                        trendingVideo.score
                 ))
                 .from(trendingVideo)
                 .join(trendingVideo.video, video)
