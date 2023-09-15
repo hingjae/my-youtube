@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -41,10 +42,10 @@ public class MonthlyVideoViewController {
     /**
      * 월별 인기동영상 검색 view
      */
-    @GetMapping("/{yearMonth}")
+    @GetMapping("/videos")
     public String getMonthlyVideo(
             @PageableDefault(size = 20, page = 0) Pageable pageable,
-            @PathVariable("yearMonth") String yearMonth,
+            @RequestParam("yearMonth") String yearMonth,
             String categoryId, Model model) {
         MonthlyVideoSearchCondition condition = MonthlyVideoSearchCondition.builder()
                 .yearMonth(yearMonth)

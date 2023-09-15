@@ -34,7 +34,7 @@
     <section class="row">
         <div class="col-9 d-flex flex-wrap justify-content-evenly">
             <div th:each="yearMonth : ${yearMonthList}" class="p-2">
-                <h2 class="text-center lh-lg font-monospace"><a th:text="${yearMonth.year} + '년 ' + ${yearMonth.month} + '월'" th:href="@{'/search-month/'+${yearMonth.yearMonth}}">2023년 8월</a></h2>
+                <h2 class="text-center lh-lg font-monospace"><a th:text="${yearMonth.year} + '년 ' + ${yearMonth.month} + '월'" th:href="@{'/search-month/videos?yearMonth='+${yearMonth.yearMonth}}">2023년 8월</a></h2>
             </div>
         </div>
     </section>
