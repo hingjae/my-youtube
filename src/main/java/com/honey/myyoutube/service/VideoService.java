@@ -2,9 +2,10 @@ package com.honey.myyoutube.service;
 
 import com.honey.myyoutube.dto.searchcondition.MonthlyVideoSearchCondition;
 import com.honey.myyoutube.dto.searchcondition.VideoSearchCondition;
+import com.honey.myyoutube.dto.view.DailyVideoSimple;
 import com.honey.myyoutube.dto.view.MonthlyVideoSimple;
 import com.honey.myyoutube.dto.view.VideoDetail;
-import com.honey.myyoutube.dto.view.VideoSimple;
+import com.honey.myyoutube.dto.view.TodayVideoSimple;
 import com.honey.myyoutube.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,14 +27,14 @@ public class VideoService {
     /**
      * 오늘 데이터 검색과 과거 데이터 검색 메서드가 각각 다름
      */
-    public Page<VideoSimple> searchVideoList(Pageable pageable, VideoSearchCondition condition) {
-        Page<VideoSimple> result;
+    public Page<DailyVideoSimple> searchVideoList(Pageable pageable, VideoSearchCondition condition) {
+        Page<? extends DailyVideoSimple> result;
         if (isToday(condition.getSearchDate())) {
             result = videoRepository.findTodayVideoPageBySearchCondition(pageable, condition);
         } else {
             result = videoRepository.findBeforeDayVideoPageBySearchCondition(pageable, condition);
         }
-        return result;
+        return (Page<DailyVideoSimple>) result;
     }
 
     private boolean isToday(LocalDate condition) {
