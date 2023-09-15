@@ -1,7 +1,8 @@
 package com.honey.myyoutube.controller.api;
 
 import com.honey.myyoutube.dto.searchcondition.VideoSearchCondition;
-import com.honey.myyoutube.dto.view.VideoSimple;
+import com.honey.myyoutube.dto.view.DailyVideoSimple;
+import com.honey.myyoutube.dto.view.TodayVideoSimple;
 import com.honey.myyoutube.service.VideoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,13 +36,13 @@ public class VideoApiController {
      * @return 오늘 날짜 데이터를 검색하는 경우 최신순으로 과거 데이터의 경우 score 순으로.
      */
     @GetMapping("/api/videos")
-    public ResponseEntity<Page<VideoSimple>> getVideoList(
+    public ResponseEntity<Page<DailyVideoSimple>> getVideoList(
             @RequestParam(name = "searchDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate searchDate,
             @RequestParam(name = "categoryId", required = false) String categoryId,
             @PageableDefault(size = 20, page = 0) Pageable pageable
     ) {
         if (searchDate == null) {searchDate = LocalDate.now(ZoneId.of("Asia/Seoul"));}
-        Page<VideoSimple> videoSimples = videoService.searchVideoList(pageable, VideoSearchCondition.of(searchDate, categoryId));
+        Page<DailyVideoSimple> videoSimples = videoService.searchVideoList(pageable, VideoSearchCondition.of(searchDate, categoryId));
         return ResponseEntity.status(HttpStatus.OK)
                 .body(videoSimples);
     }

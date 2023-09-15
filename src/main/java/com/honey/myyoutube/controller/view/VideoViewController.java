@@ -2,8 +2,9 @@ package com.honey.myyoutube.controller.view;
 
 import com.honey.myyoutube.dto.searchcondition.VideoSearchCondition;
 import com.honey.myyoutube.dto.view.CategoryDto;
+import com.honey.myyoutube.dto.view.DailyVideoSimple;
 import com.honey.myyoutube.dto.view.VideoDetail;
-import com.honey.myyoutube.dto.view.VideoSimple;
+import com.honey.myyoutube.dto.view.TodayVideoSimple;
 import com.honey.myyoutube.service.CategoryService;
 import com.honey.myyoutube.service.VideoService;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,7 @@ public class VideoViewController {
             Model model
     ) {
         if (searchDate == null) {searchDate = LocalDate.now(ZoneId.of("Asia/Seoul"));}
-        Page<VideoSimple> videos = videoService.searchVideoList(pageable, VideoSearchCondition.of(searchDate, categoryId));
+        Page<DailyVideoSimple> videos = videoService.searchVideoList(pageable, VideoSearchCondition.of(searchDate, categoryId));
         List<CategoryDto> categories = categoryService.searchCategoryList(searchDate);
         model.addAttribute("searchDate", searchDate);
         model.addAttribute("categories", categories);
