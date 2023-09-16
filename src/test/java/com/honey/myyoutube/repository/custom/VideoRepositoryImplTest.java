@@ -22,10 +22,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Import(QueryDslConfig.class)
 @DataJpaTest
@@ -39,7 +42,10 @@ class VideoRepositoryImplTest {
     public static final int COUNT_PER_HOUR = 200;
 
     public static final int PAGE_SIZE = 20;
+    public static final int FIRST_PAGE = 0;
+    public static final int LAST_PAGE = 9;
     public static final int TODAY_MAX_SCORE = 200;
+    public static final int TODAY_MIN_SCORE = 1;
     @Autowired private EntityManager em;
     @Autowired private VideoRepository videoRepository;
     @Autowired private CategoryRepository categoryRepository;
@@ -47,16 +53,60 @@ class VideoRepositoryImplTest {
     @Autowired private TodayTrendingVideoRepository todayTrendingVideoRepository;
 
 
-    @DisplayName("오늘의 실시간 인기 급상승 비디오를 score가 높은 순으로 조회 - 오늘의 데이터를 조회할 때 MAX_SCORE == 200")
+    @DisplayName("오늘의 실시간 인기 급상승 비디오 조회 (첫번째 페이지) - score가 높은 순으로 반환 MAX_SCORE == 200")
     @Test
     void test1() {
+        int firstIndex = 0;
+        int secondIndex = 1;
         saveDate();
-        Pageable pageable = PageRequest.of(0, PAGE_SIZE);
-        Assertions.assertThat(todayTrendingVideoRepository.count()).isEqualTo(COUNT_OF_TODAY_TRENDING_VIDEO);
+        Pageable pageable = PageRequest.of(FIRST_PAGE, PAGE_SIZE);
         Page<TodayVideoSimple> videoSimplePage = videoRepository.findTodayVideoPageBySearchCondition(pageable, VideoSearchCondition.of(null, null));
-        Assertions.assertThat(videoSimplePage.getContent().size()).isEqualTo(PAGE_SIZE);
-        Assertions.assertThat(videoSimplePage.getContent().get(0).getScore()).isEqualTo(TODAY_MAX_SCORE);
-        Assertions.assertThat(videoSimplePage.getContent().get(1).getScore()).isEqualTo(TODAY_MAX_SCORE - 1);
+        assertThat(todayTrendingVideoRepository.count()).isEqualTo(COUNT_OF_TODAY_TRENDING_VIDEO);
+        assertThat(videoSimplePage.getContent().size()).isEqualTo(PAGE_SIZE);
+        assertThat(videoSimplePage.getContent().get(firstIndex).getScore()).isEqualTo(TODAY_MAX_SCORE);
+        assertThat(videoSimplePage.getContent().get(secondIndex).getScore()).isEqualTo(TODAY_MAX_SCORE - 1);
+    }
+
+    @DisplayName("오늘의 실시간 인기 급상승 비디오 조회 (마지막 페이지) - MIN_SCORE == 1")
+    @Test
+    void test2() {
+        int lastIndex = 19;
+        saveDate();
+        Pageable pageable = PageRequest.of(LAST_PAGE, PAGE_SIZE);
+        Page<TodayVideoSimple> videoSimplePage = videoRepository.findTodayVideoPageBySearchCondition(pageable, VideoSearchCondition.of(null, null));
+        List<TodayVideoSimple> videos = videoSimplePage.getContent();
+        assertThat(videos.size()).isEqualTo(PAGE_SIZE);
+        assertThat(videos.get(lastIndex).getScore()).isEqualTo(TODAY_MIN_SCORE);
+    }
+
+    @DisplayName("오늘의 실시간 인기 급상승 비디오 검색조건에 카테고리 아이디 넣어서 조회")
+    @Test
+    void test3() {
+        saveDate();
+        String searchCategoryId = "1";
+
+        Long countOfSearchedVideoByCategoryId = em.createQuery(
+                        "select count(distinct v.id) " +
+                                "from TodayTrendingVideo ttv " +
+                                "join ttv.video v " +
+                                "join v.category cate " +
+                                "where cate.id = :id " +
+                                "and ttv.trendTime = " +
+                                    "(select max(ttv2.trendTime) " +
+                                        "from TodayTrendingVideo ttv2)", Long.class)
+                .setParameter("id", searchCategoryId)
+                .getSingleResult();
+
+        Pageable pageable = PageRequest.of(FIRST_PAGE, PAGE_SIZE);
+        Page<TodayVideoSimple> videoPage = videoRepository.findTodayVideoPageBySearchCondition(pageable, VideoSearchCondition.of(null, searchCategoryId));
+        List<TodayVideoSimple> videos = videoPage.getContent();
+        assertThat(videoPage.getTotalElements()).isEqualTo(countOfSearchedVideoByCategoryId);
+
+        for (TodayVideoSimple videoSimple : videos) {
+            String videoId = videoSimple.getId();
+            Video video = videoRepository.findById(videoId).orElseThrow();
+            assertThat(video.getCategory().getId()).isEqualTo(searchCategoryId);
+        }
     }
 
     private void saveDate() {
@@ -130,6 +180,7 @@ class VideoRepositoryImplTest {
             );
         }
         em.flush();
+        em.clear();
     }
 
     private void saveChannel() {
