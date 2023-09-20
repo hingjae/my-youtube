@@ -28,7 +28,6 @@ public class ScoreService {
 
     /**
      * 오늘 인기 비디오 데이터 평균 점수 계산 -> 점수는 과거 비디오 데이터를 조회할 때 정렬하기 위해 사용
-     * @param
      */
     public void processDailyData(LocalDate today) {
         List<VideoScore> videoScoreList = todayTrendingVideoRepository.getVideoScore(); // video id와 평균점수 get

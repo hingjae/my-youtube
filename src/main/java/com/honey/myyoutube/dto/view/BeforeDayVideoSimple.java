@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-@ToString
+@ToString(callSuper = true)
 @Getter
 public class BeforeDayVideoSimple extends DailyVideoSimple{
     private double scoreAvg;

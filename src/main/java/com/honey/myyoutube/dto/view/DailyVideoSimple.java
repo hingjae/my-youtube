@@ -1,9 +1,11 @@
 package com.honey.myyoutube.dto.view;
 
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
+@ToString
 @Getter
 public class DailyVideoSimple {
     protected Long trendingVideoId;
