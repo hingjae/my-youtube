@@ -6,7 +6,6 @@ import com.honey.myyoutube.dto.searchcondition.VideoSearchCondition;
 import com.honey.myyoutube.dto.view.BeforeDayVideoSimple;
 import com.honey.myyoutube.dto.view.TodayVideoSimple;
 import com.honey.myyoutube.repository.*;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,10 +15,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

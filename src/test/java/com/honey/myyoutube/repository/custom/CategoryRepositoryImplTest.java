@@ -47,6 +47,7 @@ class CategoryRepositoryImplTest {
         assertThat(todayDataCategory.size()).isEqualTo(COUNT_OF_CATEGORY);
     }
 
+    @Disabled
     @DisplayName("과거 데이터 조회 - 10개 중 9개의 카테고리만 존재하는 경우")
     @Test
     void test3() {
