@@ -24,7 +24,7 @@ public class CategoryService {
     public List<CategoryDto> searchCategoryList(LocalDate searchDate) {
         List<CategoryDto> result;
         if (isToday(searchDate)) {
-            result = categoryRepository.findTodayDataByCondition(searchDate);
+            result = categoryRepository.findTodayDataByCondition();
         } else {
             result = categoryRepository.findBeforeDayDataByCondition(searchDate);
         }

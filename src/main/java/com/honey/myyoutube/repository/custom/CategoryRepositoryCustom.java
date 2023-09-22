@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface CategoryRepositoryCustom {
-    List<CategoryDto> findTodayDataByCondition(LocalDate date);
+    List<CategoryDto> findTodayDataByCondition();
 
     List<CategoryDto> findBeforeDayDataByCondition(LocalDate date);
 

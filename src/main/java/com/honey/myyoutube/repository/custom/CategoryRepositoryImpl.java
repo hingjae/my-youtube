@@ -22,7 +22,7 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
     private final JPAQueryFactory query;
 
     @Override
-    public List<CategoryDto> findTodayDataByCondition(LocalDate searchDate) {
+    public List<CategoryDto> findTodayDataByCondition() {
         return query
                 .select(Projections.constructor(CategoryDto.class,
                     category.id, category.title, video.count()
