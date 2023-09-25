@@ -18,7 +18,7 @@ public class TodayTrendingVideoRepositoryImpl implements TodayTrendingVideoRepos
     @Override
     public List<VideoScore> getVideoScore() {
         return query
-                .selectDistinct(Projections.constructor(VideoScore.class,
+                .select(Projections.constructor(VideoScore.class,
                         video.id, todayTrendingVideo.score.avg()
                 ))
                 .from(todayTrendingVideo)
