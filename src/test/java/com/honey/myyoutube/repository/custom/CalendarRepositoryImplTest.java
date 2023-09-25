@@ -4,7 +4,6 @@ import com.honey.myyoutube.config.QueryDslConfig;
 import com.honey.myyoutube.domain.Calendar;
 import com.honey.myyoutube.dto.view.YearMonthDto;
 import com.honey.myyoutube.repository.CalendarRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Import(QueryDslConfig.class)
 @DataJpaTest
