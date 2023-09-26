@@ -11,3 +11,8 @@ spring:
 logging:
   level:
     org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+youtube:
+  video_url: https://www.googleapis.com/youtube/v3/videos
+  video_category_url: https://www.googleapis.com/youtube/v3/videoCategories
+  key: YouTubeApiKey
