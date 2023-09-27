@@ -1,5 +1,6 @@
 package com.honey.myyoutube.controller.view;
 
+import com.honey.myyoutube.dto.searchcondition.MonthlyCategorySearchCondition;
 import com.honey.myyoutube.dto.searchcondition.MonthlyVideoSearchCondition;
 import com.honey.myyoutube.dto.view.CategoryDto;
 import com.honey.myyoutube.dto.view.MonthlyVideoSimple;
@@ -47,12 +48,17 @@ public class MonthlyVideoViewController {
             @PageableDefault(size = 20, page = 0) Pageable pageable,
             @RequestParam("yearMonth") String yearMonth,
             String categoryId, Model model) {
-        MonthlyVideoSearchCondition condition = MonthlyVideoSearchCondition.builder()
+        MonthlyVideoSearchCondition videoSearchCondition = MonthlyVideoSearchCondition.builder()
                 .yearMonth(yearMonth)
                 .categoryId(categoryId)
                 .build();
-        Page<MonthlyVideoSimple> videos = videoService.searchMonthlyVideoList(pageable, condition);
-        List<CategoryDto> categories = categoryService.searchMonthlyCategoryList(condition);
+        MonthlyCategorySearchCondition categorySearchCondition = MonthlyCategorySearchCondition.builder()
+                .year(videoSearchCondition.getYear())
+                .month(videoSearchCondition.getMonth())
+                .build();
+
+        Page<MonthlyVideoSimple> videos = videoService.searchMonthlyVideoList(pageable, videoSearchCondition);
+        List<CategoryDto> categories = categoryService.searchMonthlyCategoryList(categorySearchCondition);
         YearMonthDto yearAndMonth = YearMonthDto.builder().yearMonthParam(yearMonth).build();
         model.addAttribute("year", yearAndMonth.getYear());
         model.addAttribute("month", yearAndMonth.getMonth());

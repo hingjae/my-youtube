@@ -1,5 +1,6 @@
 package com.honey.myyoutube.repository.custom;
 
+import com.honey.myyoutube.dto.searchcondition.MonthlyCategorySearchCondition;
 import com.honey.myyoutube.dto.searchcondition.MonthlyVideoSearchCondition;
 import com.honey.myyoutube.dto.view.CategoryDto;
 import com.querydsl.core.types.Projections;
@@ -54,7 +55,7 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
     }
 
     @Override
-    public List<CategoryDto> findMonthlyDataByCondition(MonthlyVideoSearchCondition condition) {
+    public List<CategoryDto> findMonthlyDataByCondition(MonthlyCategorySearchCondition condition) {
         return query
                 .select(Projections.constructor(CategoryDto.class,
                         category.id, category.title, video.id.countDistinct()

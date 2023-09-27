@@ -1,5 +1,6 @@
 package com.honey.myyoutube.service;
 
+import com.honey.myyoutube.dto.searchcondition.MonthlyCategorySearchCondition;
 import com.honey.myyoutube.dto.searchcondition.MonthlyVideoSearchCondition;
 import com.honey.myyoutube.dto.view.CategoryDto;
 import com.honey.myyoutube.repository.CategoryRepository;
@@ -39,7 +40,7 @@ public class CategoryService {
         return condition.isEqual(LocalDate.now(ZoneId.of("Asia/Seoul")));
     }
 
-    public List<CategoryDto> searchMonthlyCategoryList(MonthlyVideoSearchCondition condition) {
+    public List<CategoryDto> searchMonthlyCategoryList(MonthlyCategorySearchCondition condition) {
         List<CategoryDto> result = categoryRepository.findMonthlyDataByCondition(condition);
         result.add(0, new CategoryDto("all", "모든 동영상", null));
         return result;

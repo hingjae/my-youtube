@@ -1,5 +1,6 @@
 package com.honey.myyoutube.repository.custom;
 
+import com.honey.myyoutube.dto.searchcondition.MonthlyCategorySearchCondition;
 import com.honey.myyoutube.dto.searchcondition.MonthlyVideoSearchCondition;
 import com.honey.myyoutube.dto.view.CategoryDto;
 
@@ -11,5 +12,5 @@ public interface CategoryRepositoryCustom {
 
     List<CategoryDto> findBeforeDayDataByCondition(LocalDate date);
 
-    List<CategoryDto> findMonthlyDataByCondition(MonthlyVideoSearchCondition condition);
+    List<CategoryDto> findMonthlyDataByCondition(MonthlyCategorySearchCondition condition);
 }
