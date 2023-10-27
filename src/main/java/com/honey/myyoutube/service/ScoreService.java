@@ -33,7 +33,7 @@ public class ScoreService {
         List<VideoScore> videoScoreList = todayTrendingVideoRepository.getVideoScore(); // video id와 평균점수 get
         Calendar calendar = calendarRepository.save(Calendar.of(today));
         saveTodayTrendingVideo(videoScoreList, calendar);
-        deleteTodayTrendingVideo(today);
+        deleteTodayTrendingVideo();
     }
 
     private void saveTodayTrendingVideo(List<VideoScore> videoScoreList, Calendar calendar) {
@@ -48,7 +48,7 @@ public class ScoreService {
         );
     }
 
-    private void deleteTodayTrendingVideo(LocalDate today) {
+    private void deleteTodayTrendingVideo() {
         todayTrendingVideoRepository.deleteAll();
     }
 }

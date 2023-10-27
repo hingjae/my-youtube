@@ -23,6 +23,7 @@ public class LoadDataScheduler {
 
     /**
      * 3시간 간격으로 유튜브 api를 호출해 데이터를 불러와 저장한다.
+     * 토큰없이(null) 유튜브 api를 호출했을 때 첫페이지를 불러온다.
      */
     @Scheduled(cron = "5 0 0,3,6,9,12,15,18,21 * * *", zone = "Asia/Seoul")
     public void loadVideoData() {

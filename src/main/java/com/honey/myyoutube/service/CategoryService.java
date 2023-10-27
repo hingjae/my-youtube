@@ -1,7 +1,6 @@
 package com.honey.myyoutube.service;
 
 import com.honey.myyoutube.dto.searchcondition.MonthlyCategorySearchCondition;
-import com.honey.myyoutube.dto.searchcondition.MonthlyVideoSearchCondition;
 import com.honey.myyoutube.dto.view.CategoryDto;
 import com.honey.myyoutube.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
