@@ -14,6 +14,3 @@ YouTube Data API 를 사용하여 인기 급상승 동영상을 제공합니다.
 - javascript
 - thymeleaf
 - bootstrap
-
-### 도메인
-http://My-youtube3-env.eba-3n4k9nhd.ap-northeast-2.elasticbeanstalk.com
